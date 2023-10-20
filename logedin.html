@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>Eingelogt</title>
+     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+        }
+        h2#green {
+            color: black;
+            padding: 10px;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 300px;
+            margin: 20px auto;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 0;
+        }
+        input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .response-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #responseMessage {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <h2 id="green">Eingelogt</h2>
+        <div class="container">
+            <h2>Webhook Nachricht senden</h2>
+            <input type="text" id="messageInput" placeholder="Nachricht eingeben">
+            <button id="sendMessageButton">Senden</button>
+        </div>
+        <div class="response-container">
+            <p id="responseMessage"></p>
+        </div>
+    </div>
+    <script>
+        function hasCookie(cookieName) {
+            // Split den document.cookie-String in einzelne Cookies
+            var cookies = document.cookie.split(';');
+
+            // Durchsuche die Liste der Cookies, um das gewünschte Cookie zu finden
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.startsWith(cookieName + '=')) {
+                    return true; // Das Cookie wurde gefunden
+                }
+            }
+
+            return false; // Das Cookie wurde nicht gefunden
+        }
+
+        // Beispiel: Überprüfen, ob das Cookie "loggedIn" vorhanden ist
+        if (!hasCookie("loggedIn")) {
+            window.location = "index.html";
+        }
+
+        // Funktion zum Senden einer Nachricht an den Discord-Webhook
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("sendMessageButton").addEventListener("click", function () {
+                const webhookURL = "https://discord.com/api/webhooks/1164966113013137459/LZ2FPFWM_2OaB1SQK3RryIFckX_c-YSAT-xAyvsXIPsk9MQZqVkQIa70Yb8mZh0CzF-_"; // Hier die URL deines Discord-Webhooks einfügen
+                const messageInput = document.getElementById("messageInput");
+                const message = messageInput.value;
+                
+                fetch(webhookURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ content: message }),
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Nachricht erfolgreich an Discord gesendet.');
+                    } else {
+                        console.error('Fehler beim Senden der Nachricht an Discord.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Fehler beim Senden der Nachricht an Discord: ', error);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
